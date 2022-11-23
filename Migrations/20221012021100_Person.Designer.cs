@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace NguyenThiNhuQuynhBTH02.Migrations
 {
-    [DbContext(typeof(MvcMovieContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20221012021100_Person")]
     partial class Person
     {
@@ -19,12 +19,12 @@ namespace NguyenThiNhuQuynhBTH02.Migrations
 
             modelBuilder.Entity("NguyenThiNhuQuynhBTH02.Models.Customer", b =>
                 {
-                    b.Property<int>("CustomerID")
+                    b.Property<string>("CustomerID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Age")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Address")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("CustomerName")
                         .IsRequired()
@@ -37,12 +37,12 @@ namespace NguyenThiNhuQuynhBTH02.Migrations
 
             modelBuilder.Entity("NguyenThiNhuQuynhBTH02.Models.Employee", b =>
                 {
-                    b.Property<int>("EmployeeID")
+                    b.Property<string>("EmployeeID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Age")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Address")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("EmployeeName")
                         .IsRequired()
@@ -55,12 +55,12 @@ namespace NguyenThiNhuQuynhBTH02.Migrations
 
             modelBuilder.Entity("NguyenThiNhuQuynhBTH02.Models.Person", b =>
                 {
-                    b.Property<int>("PersonID")
+                    b.Property<string>("PersonID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("Age")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Age")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PersonName")
                         .IsRequired()

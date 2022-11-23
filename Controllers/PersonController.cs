@@ -6,106 +6,87 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NguyenThiNhuQuynhBTH02.Models;
+using NguyenThiNhuQuynhBTH02.Models.Process;
+
+
 
 namespace NguyenThiNhuQuynhBTH02.Controllers
 {
     public class PersonController : Controller
     {
-        private readonly MvcMovieContext _context;
-
-        public PersonController(MvcMovieContext context)
+        private readonly ApplicationDbContext  _context;
+        public PersonController (ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Person
+        //Khai báo class ExcelProcess trong PersonController
+        private ExcelProcess _excelProcess = new ExcelProcess();
+
         public async Task<IActionResult> Index()
         {
-              return _context.Person != null ? 
-                          View(await _context.Person.ToListAsync()) :
-                          Problem("Entity set 'MvcMovieContext.Person'  is null.");
+            var model = await _context.Person.ToListAsync();
+            return View(model);
         }
 
-        // GET: Person/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Person == null)
-            {
-                return NotFound();
-            }
-
-            var person = await _context.Person
-                .FirstOrDefaultAsync(m => m.PersonID == id);
-            if (person == null)
-            {
-                return NotFound();
-            }
-
-            return View(person);
-        }
-
-        // GET: Person/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Person/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PersonID,PersonName,Age")] Person person)
+        public async Task<IActionResult> Create(Person ps)
         {
-            if (ModelState.IsValid)
+            if(ModelState.IsValid)
             {
-                _context.Add(person);
+                _context.Add(ps);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(person);
+            return View();
         }
 
-        // GET: Person/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        private bool PersonExists (string id)
         {
-            if (id == null || _context.Person == null)
+            return _context.Person.Any(e => e.PersonID == id);
+        }
+
+        public async Task<IActionResult> Edit(string id)
+        {
+            if (id == null)
             {
-                return NotFound();
+                return View("NotFound");
             }
 
             var person = await _context.Person.FindAsync(id);
             if (person == null)
             {
-                return NotFound();
+                return View("NotFound");
             }
             return View(person);
         }
 
-        // POST: Person/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PersonID,PersonName,Age")] Person person)
+        public async Task<IActionResult> Edit(string id, [Bind("PersonID,PersonName")] Person ps)
         {
-            if (id != person.PersonID)
+            if (id != ps.PersonID)
             {
-                return NotFound();
+                return View("NotFound");
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(person);
+                    _context.Update(ps);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PersonExists(person.PersonID))
+                    if (!PersonExists(ps.PersonID))
                     {
-                        return NotFound();
+                        return View("NotFound");
                     }
                     else
                     {
@@ -114,49 +95,82 @@ namespace NguyenThiNhuQuynhBTH02.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(person);
+            return View(ps);
         }
 
-        // GET: Person/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string id)
         {
-            if (id == null || _context.Person == null)
+            if(id == null)
             {
-                return NotFound();
+                return View("NotFound");
             }
 
-            var person = await _context.Person
-                .FirstOrDefaultAsync(m => m.PersonID == id);
-            if (person == null)
+            var ps = await _context.Person.FirstOrDefaultAsync(m => m.PersonID == id);
+            if (ps == null)
             {
-                return NotFound();
+                return View("NotFound");
             }
 
-            return View(person);
+            return View(ps);
         }
 
-        // POST: Person/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            if (_context.Person == null)
-            {
-                return Problem("Entity set 'MvcMovieContext.Person'  is null.");
-            }
-            var person = await _context.Person.FindAsync(id);
-            if (person != null)
-            {
-                _context.Person.Remove(person);
-            }
-            
+            var ps = await _context.Person.FindAsync(id);
+            _context.Person.Remove(ps);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PersonExists(int id)
+        public async Task<IActionResult> Upload()
         {
-          return (_context.Person?.Any(e => e.PersonID == id)).GetValueOrDefault();
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult>Upload(IFormFile file)
+        {
+            if (file!=null)
+            {
+                string fileExtension = Path.GetExtension(file.FileName);
+                if (fileExtension != ".xls" && fileExtension != ".xlsx")
+                {
+                    ModelState.AddModelError("", "Please choose excel file to upload!");
+                }
+                else
+                {
+                    //rename file when upload to sever
+                    var fileName = DateTime.Now.ToShortTimeString() + fileExtension;
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory() + "/Uploads/Excels", fileName);
+                    var fileLocation = new FileInfo(filePath).ToString();
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        //save file to server
+                        await file.CopyToAsync(stream);
+                        //read data from file and write to database
+                        var dt = _excelProcess.ExcelToDataTable(fileLocation);
+                        //using for loop to read data form dt
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                        {
+                            //create a new Person object
+                            var per = new Person();
+                            //set values for attribiutes
+                            per.PersonID = dt.Rows[i][0].ToString();
+                            per.PersonName = dt.Rows[i][1].ToString();
+                            per.Address = dt.Rows[i][2].ToString();
+                            //add oject to context
+                            _context.Person.Add(per);
+                        }
+                        //save to database
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+            }
+            return View();
         }
     }
 }
+   

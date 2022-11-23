@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace NguyenThiNhuQuynhBTH02.Migrations
 {
-    [DbContext(typeof(MvcMovieContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20221012014630_Employee")]
     partial class Employee
     {
@@ -19,12 +19,12 @@ namespace NguyenThiNhuQuynhBTH02.Migrations
 
             modelBuilder.Entity("NguyenThiNhuQuynhBTH02.Models.Employee", b =>
                 {
-                    b.Property<int>("EmployeeID")
+                    b.Property<string>("EmployeeID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("Age")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Address")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("EmployeeName")
                         .IsRequired()
@@ -37,12 +37,12 @@ namespace NguyenThiNhuQuynhBTH02.Migrations
 
             modelBuilder.Entity("NguyenThiNhuQuynhBTH02.Models.Student", b =>
                 {
-                    b.Property<int>("StudentID")
+                    b.Property<string>("StudentID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("Age")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Address")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("StudentName")
                         .IsRequired()

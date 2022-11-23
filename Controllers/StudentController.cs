@@ -1,19 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NguyenThiNhuQuynhBTH02.Models;
+using NguyenThiNhuQuynhBTH02.Models.Process;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace NguyenThiNhuQuynhBTH02.Controllers
+namespace BaiThucHanhExcel.Controllers
 {
     public class StudentController : Controller
     {
-        private readonly MvcMovieContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public StudentController(MvcMovieContext context)
+        public StudentController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -21,13 +18,13 @@ namespace NguyenThiNhuQuynhBTH02.Controllers
         // GET: Student
         public async Task<IActionResult> Index()
         {
-              return _context.Student != null ? 
-                          View(await _context.Student.ToListAsync()) :
-                          Problem("Entity set 'MvcMovieContext.Student'  is null.");
+            return _context.Student != null ?
+                        View(await _context.Student.ToListAsync()) :
+                        Problem("Entity set 'ApplicationDbcontext.Student'  is null.");
         }
 
         // GET: Student/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string id)
         {
             if (id == null || _context.Student == null)
             {
@@ -47,6 +44,7 @@ namespace NguyenThiNhuQuynhBTH02.Controllers
         // GET: Student/Create
         public IActionResult Create()
         {
+            ViewData["FacultyID"] = new SelectList(_context.Faculty, "FacultyID", "FacultyName");
             return View();
         }
 
@@ -55,7 +53,7 @@ namespace NguyenThiNhuQuynhBTH02.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("StudentID,StudentName,Age")] Student student)
+        public async Task<IActionResult> Create([Bind("StudentID,StudentName,StudentAddress,FacultyID")] Student student)
         {
             if (ModelState.IsValid)
             {
@@ -63,11 +61,13 @@ namespace NguyenThiNhuQuynhBTH02.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["FacultyID"] = new SelectList(_context.Faculty, "FacultyID", "FacultyName", student.FacultyID);
+
             return View(student);
         }
 
         // GET: Student/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(string id)
         {
             if (id == null || _context.Student == null)
             {
@@ -87,7 +87,7 @@ namespace NguyenThiNhuQuynhBTH02.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("StudentID,StudentName,Age")] Student student)
+public async Task<IActionResult> Edit(string id, [Bind("StudentID,StudentName,StudentAddress")] Student student)
         {
             if (id != student.StudentID)
             {
@@ -118,7 +118,7 @@ namespace NguyenThiNhuQuynhBTH02.Controllers
         }
 
         // GET: Student/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string id)
         {
             if (id == null || _context.Student == null)
             {
@@ -138,25 +138,25 @@ namespace NguyenThiNhuQuynhBTH02.Controllers
         // POST: Student/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             if (_context.Student == null)
             {
-                return Problem("Entity set 'MvcMovieContext.Student'  is null.");
+                return Problem("Entity set 'ApplicationDbcontext.Student'  is null.");
             }
             var student = await _context.Student.FindAsync(id);
             if (student != null)
             {
                 _context.Student.Remove(student);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool StudentExists(int id)
+        private bool StudentExists(string id)
         {
-          return (_context.Student?.Any(e => e.StudentID == id)).GetValueOrDefault();
+            return (_context.Student?.Any(e => e.StudentID == id)).GetValueOrDefault();
         }
     }
 }

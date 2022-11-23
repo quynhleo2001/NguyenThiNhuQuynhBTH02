@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "MfpLM9aItLoxy5q9/Q5/S6mp404ISXMB1fMFJ4Vtqo5vpXaRyfoGM2e/w3iFc9fEyIX7aKx7D9t9jhrpZU9d6g==",
+  "dgSpecHash": "GSvFAualD1RLYuq58p++iYuALp4Cl9kEFzPz0WM43sZV4x7e79M/bemysDuESiXfBgNuGJ37eQ4H3eaXeR1oMg==",
   "success": true,
   "projectFilePath": "C:\\Users\\QUYNH\\OneDrive\\NguyenThiNhuQuynhBTH02\\NguyenThiNhuQuynhBTH02\\NguyenThiNhuQuynhBTH02.csproj",
   "expectedPackageFiles": [
@@ -191,7 +191,11 @@
     "C:\\Users\\QUYNH\\.nuget\\packages\\system.threading.timer\\4.3.0\\system.threading.timer.4.3.0.nupkg.sha512",
     "C:\\Users\\QUYNH\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512",
     "C:\\Users\\QUYNH\\.nuget\\packages\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
-    "C:\\Users\\QUYNH\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512"
+    "C:\\Users\\QUYNH\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
+    "C:\\Users\\QUYNH\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.10\\microsoft.netcore.app.ref.6.0.10.nupkg.sha512",
+    "C:\\Users\\QUYNH\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.10\\microsoft.windowsdesktop.app.ref.6.0.10.nupkg.sha512",
+    "C:\\Users\\QUYNH\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.10\\microsoft.aspnetcore.app.ref.6.0.10.nupkg.sha512",
+    "C:\\Users\\QUYNH\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.10\\microsoft.netcore.app.host.win-x64.6.0.10.nupkg.sha512"
   ],
   "logs": []
 }

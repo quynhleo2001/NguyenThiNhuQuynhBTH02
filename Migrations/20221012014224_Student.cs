@@ -12,10 +12,10 @@ namespace NguyenThiNhuQuynhBTH02.Migrations
                 name: "Student",
                 columns: table => new
                 {
-                    StudentID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    StudentID = table.Column<string>(type: "TEXT", nullable: false)
+                       .Annotation("Sqlite:Autoincrement", true),
                     StudentName = table.Column<string>(type: "TEXT", nullable: false),
-                    Age = table.Column<int>(type: "INTEGER", nullable: false)
+                    Address = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
